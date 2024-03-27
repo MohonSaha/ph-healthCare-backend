@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AdminServices } from "./admin.service";
 import pick from "../../../shared/pick";
 import { adminFilterableFilds } from "./admin.constant";
+import sendResponse from "../../../shared/sendResponse";
 
 const getAllAdmins = async (req: Request, res: Response) => {
   try {
@@ -10,7 +11,8 @@ const getAllAdmins = async (req: Request, res: Response) => {
     console.log(options);
     const result = await AdminServices.getAllAdmins(filters, options);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Admins retrieve successfully!",
       meta: result.meta,
@@ -30,7 +32,8 @@ const getSingleAdminData = async (req: Request, res: Response) => {
   try {
     const result = await AdminServices.getSingleDataFromDB(id);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Admin retrieve successfully!",
       data: result,
@@ -49,7 +52,8 @@ const updateAdminData = async (req: Request, res: Response) => {
   try {
     const result = await AdminServices.updateAdminDataFromDB(id, req.body);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Admin data updated successfully!",
       data: result,
@@ -68,9 +72,30 @@ const deleteAdminData = async (req: Request, res: Response) => {
   try {
     const result = await AdminServices.deleteFromDB(id);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Admin data deleted successfully!",
+      data: result,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong!",
+      error: err,
+    });
+  }
+};
+
+const softDeleteAdminData = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await AdminServices.softDeleteFromDB(id);
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Admin data soft delete successfully!",
       data: result,
     });
   } catch (err) {
@@ -87,4 +112,5 @@ export const AdminControllers = {
   getSingleAdminData,
   updateAdminData,
   deleteAdminData,
+  softDeleteAdminData,
 };
