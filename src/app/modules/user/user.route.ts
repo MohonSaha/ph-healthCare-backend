@@ -1,17 +1,20 @@
 import express, { NextFunction, Request, Response } from "express";
 import { UserControllers } from "./user.controller";
-import { jwtHelpers } from "../../../helpers/jwtHelper";
-import config from "../../../config";
+
 import { Secret } from "jsonwebtoken";
 import auth from "../../middlewares/auth";
-import { UserRole } from "@prisma/client";
+import { fileUploader } from "../../../helpers/fileUploader";
+import { userValidations } from "./user.validation";
 
 const router = express.Router();
 
 router.post(
   "/",
-  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-  UserControllers.createAdmin
+  fileUploader.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = userValidations.createAdmin.parse(JSON.parse(req.body.data));
+    return UserControllers.createAdmin(req, res);
+  }
 );
 
 export const UserRoutes = router;

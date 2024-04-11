@@ -1,7 +1,5 @@
 import cors from "cors";
 import express, { Application, NextFunction, Request, Response } from "express";
-import { UserRoutes } from "./app/modules/user/user.route";
-import { AdminRoutes } from "./app/modules/admin/admin.route";
 import router from "./app/routes";
 import httpStatus from "http-status";
 import globalErrorHanlder from "./app/middlewares/globalErrorHandler";

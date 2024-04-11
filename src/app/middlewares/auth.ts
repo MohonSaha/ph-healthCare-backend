@@ -6,7 +6,11 @@ import ApiError from "../errors/ApiError";
 import httpStatus from "http-status";
 
 const auth = (...roles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request & { user?: any },
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       // retrive the token from headers
       const token = req.headers.authorization;
@@ -20,6 +24,9 @@ const auth = (...roles: string[]) => {
         token,
         config.JWT_ACCESS_SECRET as Secret
       );
+
+      // set verified user data to the request
+      req.user = verifiedUser;
 
       // If there is any role available and that roles are matched with token role
       if (roles.length && !roles.includes(verifiedUser.role)) {
