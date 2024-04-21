@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { fileUploader } from "../../../helpers/fileUploader";
 import prisma from "../../../shared/prisma";
 
