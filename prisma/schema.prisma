@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,37 +7,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id String @id @default(uuid())
-  email String @unique
-  password String
-  role UserRole
-  needPasswordChange Boolean @default(true)
-  status UserStatus @default(ACTIVE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String     @id @default(uuid())
+  email              String     @unique
+  password           String
+  role               UserRole
+  needPasswordChange Boolean    @default(true)
+  status             UserStatus @default(ACTIVE)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 
   // relations
-  admin Admin?
+  admin   Admin?
+  doctor  Doctor?
+  Patient Patient?
 
-@@map("users")
+  @@map("users")
 }
 
 model Admin {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  profilePhoto String? 
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  profilePhoto  String?
   contactNumber String
-  isDeleted Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // relations
   user User @relation(fields: [email], references: [email])
 
   @@map("admins")
+}
+
+model Doctor {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String   @unique
+  profilePhoto        String?
+  contactNumber       String
+  address             String?
+  registrationNo      String
+  experience          Int      @default(0)
+  gender              Gender
+  appointmentFee      Int
+  qualification       String
+  currentWorkignPlace String
+  designation         String
+  // averageRation       Float
+  isDeleted           Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // realtion 
+  user User @relation(fields: [email], references: [email])
+
+  @@map("doctors")
+}
+
+model Patient {
+  id            String   @id @unique @default(uuid())
+  email         String   @unique
+  name          String
+  profilePhoto  String?
+  contactNumber String?
+  address       String?
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(references: [email], fields: [email])
+
+  @@map("patients")
 }
 
 enum UserRole {
@@ -53,4 +93,9 @@ enum UserStatus {
   ACTIVE
   BLOCKED
   DELETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
