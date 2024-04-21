@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { UserControllers } from "./user.controller";
 
-import { Secret } from "jsonwebtoken";
 import auth from "../../middlewares/auth";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { userValidations } from "./user.validation";
