@@ -1,3 +1,4 @@
+import { date } from "zod";
 import prisma from "../../../shared/prisma";
 import { IAuthUser } from "../../interfaces/common";
 import { v4 as uuidv4 } from "uuid";
@@ -40,6 +41,7 @@ const createAppointment = async (user: IAuthUser, payload: any) => {
       },
     });
 
+    // booked doctor schedule for perticular appointment
     await tx.doctorSchedules.update({
       where: {
         doctorId_scheduleId: {
@@ -50,6 +52,28 @@ const createAppointment = async (user: IAuthUser, payload: any) => {
       data: {
         isBooked: true,
         appointmentId: appointmentData.id,
+      },
+    });
+
+    const today = new Date();
+    const transactionId =
+      "PH-Healthcare-" +
+      today.getFullYear() +
+      "-" +
+      today.getMonth() +
+      "-" +
+      today.getDay() +
+      "-" +
+      today.getHours() +
+      "-" +
+      today.getMinutes();
+
+    // payment data creation
+    await tx.payment.create({
+      data: {
+        appointmentId: appointmentData.id,
+        amount: doctorData.appointmentFee,
+        transactionId: transactionId,
       },
     });
 

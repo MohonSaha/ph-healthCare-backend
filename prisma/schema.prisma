@@ -168,7 +168,6 @@ model doctorSchedules {
   appointmentId String? @unique
 
   appointment Appointment? @relation(fields: [appointmentId], references: [id])
-
   schedule Schedule @relation(fields: [scheduleId], references: [id])
   doctor   Doctor   @relation(fields: [doctorId], references: [id])
 
@@ -192,8 +191,24 @@ model Appointment {
   doctor          Doctor           @relation(fields: [doctorId], references: [id])
   schedule        Schedule         @relation(fields: [scheduleId], references: [id])
   doctorSchedules doctorSchedules?
+  payment         Payment?
 
   @@map("appointments")
+}
+
+model Payment {
+  id            String      @id @default(uuid())
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+
+  amount             Float
+  transactionId      String        @unique
+  status             paymentStatus @default(UNPAID)
+  paymentGatewayData Json?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@map("payment")
 }
 
 enum UserRole {
