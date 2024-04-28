@@ -55,7 +55,7 @@ model Doctor {
   qualification       String
   currentWorkignPlace String
   designation         String
-  // averageRation       Float
+  averageRation       Float @default(0.0)
   isDeleted           Boolean  @default(false)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
@@ -219,7 +219,7 @@ model Payment {
 
 model Prescription {
   id            String      @id @default(uuid())
-  appointmentId String      @unique
+  appointmentId String      @unique   // one review for one appointment
   appointment   Appointment @relation(fields: [appointmentId], references: [id])
   patientId     String
   doctorId      String
