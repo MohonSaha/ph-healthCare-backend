@@ -65,6 +65,8 @@ model Doctor {
   DoctorSpecialities DoctorSpecialities[]
   doctorSchedules    doctorSchedules[]
   appointment        Appointment[]
+  prescription       Prescription[]
+  review             Review[]
 
   @@map("doctors")
 }
@@ -85,6 +87,8 @@ model Patient {
   patientHealthData PatientHealthData?
   medicalReport     MedicalReport[]
   appointment       Appointment[]
+  prescription      Prescription[]
+  review            Review[]
 
   @@map("patients")
 }
@@ -168,8 +172,8 @@ model doctorSchedules {
   appointmentId String? @unique
 
   appointment Appointment? @relation(fields: [appointmentId], references: [id])
-  schedule Schedule @relation(fields: [scheduleId], references: [id])
-  doctor   Doctor   @relation(fields: [doctorId], references: [id])
+  schedule    Schedule     @relation(fields: [scheduleId], references: [id])
+  doctor      Doctor       @relation(fields: [doctorId], references: [id])
 
   @@id([doctorId, scheduleId])
   @@map("doctor_schedules")
@@ -192,6 +196,8 @@ model Appointment {
   schedule        Schedule         @relation(fields: [scheduleId], references: [id])
   doctorSchedules doctorSchedules?
   payment         Payment?
+  prescription    Prescription?
+  review          Review?
 
   @@map("appointments")
 }
@@ -209,6 +215,36 @@ model Payment {
   updatedAt          DateTime      @updatedAt
 
   @@map("payment")
+}
+
+model Prescription {
+  id            String      @id @default(uuid())
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  patientId     String
+  doctorId      String
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+  patient       Patient     @relation(fields: [patientId], references: [id])
+  instructions  String
+  followUpDate  DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("prescription")
+}
+
+model Review {
+  id            String      @id @default(uuid())
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  patientId     String
+  doctorId      String
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+  patient       Patient     @relation(fields: [patientId], references: [id])
+  rating        Float
+  comment       String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 enum UserRole {
