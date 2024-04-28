@@ -7,4 +7,6 @@ const router = express.Router();
 
 router.post("/init-payment/:appointmentId", paymentController.initPayment);
 
+router.get("/ipn", paymentController.validatePayment);
+
 export const PaymentRoutes = router;
