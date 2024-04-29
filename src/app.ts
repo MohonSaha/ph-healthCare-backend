@@ -15,14 +15,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+AppointmentService.calcelUnpaidAppointments();
 // node cron for schedule
-cron.schedule("* * * * *", () => {
-  try {
-    AppointmentService.calcelUnpaidAppointments();
-  } catch (error) {
-    console.log(error);
-  }
-});
+// cron.schedule("* * * * *", () => {
+//   try {
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Ph health care server testing!");

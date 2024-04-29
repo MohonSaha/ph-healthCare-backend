@@ -225,6 +225,8 @@ const calcelUnpaidAppointments = async () => {
       },
     });
 
+    // console.log(appointmentIdsToCancel);
+
     // delete data from appointment table
     await tx.appointment.deleteMany({
       where: {
@@ -248,7 +250,7 @@ const calcelUnpaidAppointments = async () => {
     }
   });
 
-  console.log("deleted unpaid appointment in every 30 minutes");
+  // console.log("deleted unpaid appointment in every 30 minutes");
 };
 
 export const AppointmentService = {
