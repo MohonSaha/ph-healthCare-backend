@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "postinstall": "prisma generate",
-    "build": "tsc"
+    "build": "tsc",
+    "seed-admin": "ts-node-dev --respawn --transpile-only prisma/seed.ts"
   },
   "author": "",
   "license": "ISC",
